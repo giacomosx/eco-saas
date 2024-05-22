@@ -23,8 +23,17 @@ const createCompany = async (req, res) => {
 const getCompanyInfo = async (req, res) => {
   const id = req.params.id;
   try {
-    const companyInfo = await Company.findById(id).populate('users');
+    const companyInfo = await Company.findById(id).populate(['users', 'customers']);
     res.status(200).json(companyInfo);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getCompanies = async (req, res) => {
+  try {
+    const companyList = await Company.find();
+    res.status(200).json(companyList);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -33,4 +42,5 @@ const getCompanyInfo = async (req, res) => {
 module.exports = {
   createCompany,
   getCompanyInfo,
+  getCompanies
 };

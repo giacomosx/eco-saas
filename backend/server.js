@@ -4,19 +4,21 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
+const server = express();
+
 const companyRoute = require('./routes/company')
 const usersRoute = require('./routes/users')
+const customersRoute = require('./routes/customers')
 
 const PORT = process.env.PORT || 5000;
 const DB_NAME = "eco-saas-test";
-
-const server = express();
 
 server.use(cors());
 server.use(express.json());
 
 server.use('/api/company', companyRoute)
 server.use('/api/users', usersRoute)
+server.use('/api/customers', customersRoute)
 
 startServer();
 
