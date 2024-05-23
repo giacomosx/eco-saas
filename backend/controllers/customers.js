@@ -42,11 +42,20 @@ const createCustomer = async (req, res) => {
 };
 
 const getCustomers = async (req, res) => {
-  const id = req.params.companyId;
+  try {
+    const customers = await Customer.find()
+    res.status(200).json(customers)
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getCustomer = async (req, res) => {
+  const customerId = req.params.customerId
 
   try {
-    const customers = await Customer.find({company: id})
-    res.status(200).json(customers)
+    const customer = await Customer.find({_id : customerId})
+    res.status(200).json(customer)
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -54,5 +63,6 @@ const getCustomers = async (req, res) => {
 
 module.exports = {
   createCustomer,
-  getCustomers
+  getCustomers,
+  getCustomer
 };

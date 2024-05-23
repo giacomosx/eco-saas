@@ -12,7 +12,7 @@ const userSchema = mongoose.Schema(
     },
     phone: {
       type: String,
-      required: false,
+      required: true,
     },
     mail: {
       type: String,

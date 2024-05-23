@@ -2,30 +2,47 @@ const { body, validationResult } = require("express-validator");
 
 const fieldsValidation = [
   body("name")
-    .isString()
-    .withMessage("Must be a string")
+    .trim()
     .notEmpty()
-    .withMessage("Insert a name"),
+    .withMessage("Insert a name")
+    .isString()
+    .withMessage("Must be a string"),
+  
+  body("surname")
+    .trim()
+    .notEmpty()
+    .withMessage("Insert a surname")
+    .isString()
+    .withMessage("Must be a string"),
+    
+  body("phone")
+      .optional()
+      .trim()
+      .isMobilePhone()
+      .withMessage("Insert an mobile phone"),
   
   body("mail")
-    .isEmail()
-    .withMessage("Insert a valid email")
+    .trim()
     .notEmpty()
-    .withMessage("Insert an email"),
+    .withMessage("Insert an email")
+    .isEmail()
+    .withMessage("Insert a valid email"),
   
   body("password")
+    .trim()
+    .notEmpty()
+    .withMessage("Insert a password")
     .isAlphanumeric()
     .withMessage('Must be alphanumeric')
     .isLength({min: 8})
-    .withMessage('Min 8 character')
-    .notEmpty()
-    .withMessage("Insert a password"),
+    .withMessage('Min 8 character'),
   
   body("job_title")
-    .isString()
-    .withMessage("Must be a string")
+    .trim()
     .notEmpty()
-    .withMessage("Insert a Job Title"),
+    .withMessage("Insert a Job Title")
+    .isString()
+    .withMessage("Must be a string"),
   
   body("role")
     .isString()
@@ -36,6 +53,8 @@ const fieldsValidation = [
     .withMessage("Insert a role"),
   
   body("company")
+    .trim()
+    .notEmpty()
     .isMongoId()
     .withMessage("Insert a valid MongoDB Id"),
     

@@ -22,10 +22,6 @@ const companySchema = mongoose.Schema(
       required: true,
       unique: true
     },
-    password: {
-      type: String,
-      required: true,
-    },
     users: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Users',

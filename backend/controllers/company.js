@@ -10,7 +10,7 @@ const createCompany = async (req, res) => {
       vatNumber,
       phone,
       mail,
-      password
+      password,
     });
 
     const newCompany = await company.save();
@@ -21,9 +21,14 @@ const createCompany = async (req, res) => {
 };
 
 const getCompanyInfo = async (req, res) => {
-  const id = req.params.id;
+  const companyId = req.params.companyId;
+
+
   try {
-    const companyInfo = await Company.findById(id).populate(['users', 'customers']);
+    const companyInfo = await Company.findById(companyId).populate([
+      "users",
+      "customers",
+    ]);
     res.status(200).json(companyInfo);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -39,8 +44,38 @@ const getCompanies = async (req, res) => {
   }
 };
 
+const getCustomersByCompany = async (req, res) => {
+  const companyId = req.params.companyId;
+
+  try {
+    const customers = await Company.findById(companyId)
+      .select("customers")
+      .populate("customers");
+
+    res.status(200).json(customers);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getUsersByCompany = async (req, res) => {
+  const companyId = req.params.companyId;
+
+  try {
+    const users = await Company.findById(companyId)
+      .select("users")
+      .populate("users");
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createCompany,
   getCompanyInfo,
-  getCompanies
+  getCompanies,
+  getCustomersByCompany,
+  getUsersByCompany
 };
