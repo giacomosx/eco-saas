@@ -45,12 +45,6 @@ const customerSchema = mongoose.Schema(
         hours: { type: String, required: false },
       },
     ],
-    rdo: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Rdo",
-      },
-    ],
     quotes: [
       {
         type: mongoose.Schema.Types.ObjectId,

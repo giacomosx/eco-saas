@@ -7,6 +7,7 @@ company.route("/").get(controller.getCompanies);
 company.route("/:companyId").get(controller.getCompanyInfo);
 company.route("/:companyId/customers").get(controller.getCustomersByCompany);
 company.route("/:companyId/users").get(controller.getUsersByCompany);
+company.route("/:companyId/rdo").get(controller.getRdoByCompany);
 
 company.route("/").post(fieldsValidation, controller.createCompany);
 

@@ -25,10 +25,7 @@ const getCompanyInfo = async (req, res) => {
 
 
   try {
-    const companyInfo = await Company.findById(companyId).populate([
-      "users",
-      "customers",
-    ]);
+    const companyInfo = await Company.findById(companyId)
     res.status(200).json(companyInfo);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -72,10 +69,25 @@ const getUsersByCompany = async (req, res) => {
   }
 };
 
+const getRdoByCompany = async (req, res) => {
+  const companyId = req.params.companyId;
+
+  try {
+    const allRdo = await Company.findById(companyId)
+      .select("rdo")
+      .populate("rdo");
+
+    res.status(200).json(allRdo);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createCompany,
   getCompanyInfo,
   getCompanies,
   getCustomersByCompany,
-  getUsersByCompany
+  getUsersByCompany,
+  getRdoByCompany
 };

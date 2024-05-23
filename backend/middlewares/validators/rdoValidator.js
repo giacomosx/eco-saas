@@ -1,10 +1,27 @@
 const { body, validationResult } = require("express-validator");
 
 const fieldsValidation = [
-    body('prospect')
+    body('prospect.name')
         .trim()
         .notEmpty()
-        .withMessage('Insert a prospect')
+        .withMessage('Insert a prospect name')
+        .isString()
+        .withMessage('Must be a string'),
+    
+    body('prospect.phone')
+        .optional()
+        .isMobilePhone()
+        .withMessage('Must be a valid mobile phone'),
+    
+    body('prospect.mail')
+        .optional()
+        .isEmail()
+        .withMessage('Must be a valid email'),
+
+    body('prospect.local_unit')
+        .trim()
+        .notEmpty()
+        .withMessage('Insert a prospect local unit')
         .isString()
         .withMessage('Must be a string'),
     
@@ -28,13 +45,30 @@ const fieldsValidation = [
         .withMessage('Insert a description')
         .isString()
         .withMessage('Must be a string'),
-
-    body('local_unit')
+    
+    body('company')
         .trim()
         .notEmpty()
         .withMessage('Insert a local unit')
-        .isString()
-        .withMessage('Must be a string')
+        .isMongoId()
+        .withMessage('Must be a Mongo DB id'),
+
+    body('related_customer')
+        .optional()
+        .isMongoId()
+        .withMessage('Must be a Mongo DB id'),
+
+    body('related_quote')
+        .optional()
+        .isMongoId()
+        .withMessage('Must be a Mongo DB id'),
+    
+    body('author')
+        .trim()
+        .notEmpty()
+        .withMessage('Insert an author')
+        .isMongoId()
+        .withMessage('Must be a Mongo DB id')
   ,
   (req, res, next) => {
     const errors = validationResult(req);

@@ -20,16 +20,24 @@ const companySchema = mongoose.Schema(
     mail: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
-    users: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Users',
-    }],
+    users: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users",
+      },
+    ],
     customers: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Customers",
+      },
+    ],
+    rdo: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Rdo",
       },
     ],
     suppliers: [
