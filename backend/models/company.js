@@ -12,6 +12,7 @@ const companySchema = mongoose.Schema(
     vatNumber: {
       type: String,
       required: true,
+      unique: true
     },
     phone: {
       type: String,

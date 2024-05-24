@@ -34,13 +34,13 @@ const customerSchema = mongoose.Schema(
     },
     localUnit: [
       {
-        name: { type: String, required: true },
+        name_localUnit: { type: String, required: true },
         address: { type: String, required: true },
         referent: {
-          name: { type: String, required: true },
+          name_referent: { type: String, required: true },
           job_title: { type: String, required: false },
-          phone: { type: String, required: true },
-          mail: { type: String, required: false, unique: true },
+          phone_referent: { type: String, required: true },
+          mail_referent: { type: String, required: false},
         },
         hours: { type: String, required: false },
       },

@@ -11,6 +11,9 @@ const usersRoute = require('./routes/users')
 const customersRoute = require('./routes/customers')
 const rdoRoute = require('./routes/rdo')
 
+const generalErrorsHandler = require('./middlewares/errors/generalErrorsHandler')
+const notFoundError = require('./middlewares/errors/notFoundError')
+
 const PORT = process.env.PORT || 5000;
 const DB_NAME = "eco-saas-test";
 
@@ -21,6 +24,9 @@ server.use('/api/companies', companyRoute)
 server.use('/api/users', usersRoute)
 server.use('/api/customers', customersRoute)
 server.use('/api/rdo', rdoRoute)
+
+server.use('/', notFoundError)
+server.use(generalErrorsHandler)
 
 startServer();
 
