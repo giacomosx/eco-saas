@@ -14,6 +14,8 @@ const rdoRoute = require('./routes/rdo')
 const generalErrorsHandler = require('./middlewares/errors/generalErrorsHandler')
 const notFoundError = require('./middlewares/errors/notFoundError')
 
+const sendEmail = require('./utils/sendGrid')
+
 const PORT = process.env.PORT || 5000;
 const DB_NAME = "eco-saas-test";
 
@@ -24,6 +26,9 @@ server.use('/api/companies', companyRoute)
 server.use('/api/users', usersRoute)
 server.use('/api/customers', customersRoute)
 server.use('/api/rdo', rdoRoute)
+
+//testing email with sendgrid
+//server.post('/api/sending-email', sendEmail)
 
 server.use('/', notFoundError)
 server.use(generalErrorsHandler)
