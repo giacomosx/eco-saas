@@ -1,93 +1,94 @@
 const Company = require("../models/company");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-const createCompany = async (req, res) => {
-  const { name, address, vatNumber, phone, mail, password } = req.body;
+const companyRegister = async (req, res, next) => {
+    const {vatNumber, mail, password} = req.body;
 
-  try {
-    const company = new Company({
-      name,
-      address,
-      vatNumber,
-      phone,
-      mail,
-      password,
-    });
+    try {
+        const companyVAT = await Company.findOne({vatNumber});
+        if (companyVAT) {
+            return res.status(400).json({message: "A company with this VAT already exist"});
+        }
 
-    const newCompany = await company.save();
-    res.status(201).json(newCompany);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+        const companyMail = await Company.findOne({mail});
+        if (companyMail) {
+            return res.status(400).json({message: "A company with this email already exist"});
+        }
+
+        bcrypt.hash(password, 10, async (err, hash) => {
+            if (err) return res.status(500).json(err);
+
+            try {
+                const newCompany = new Company({
+                    ...req.body,
+                    password: hash,
+                });
+
+                await newCompany.save();
+                const token = await jwt.sign({ID: newCompany._id, email: mail},
+                    process.env.JWT_SECRET_KEY,
+                    {expiresIn: '15m'});
+
+                req.body.token = token;
+
+                next()
+            } catch (e) {
+                res.status(400).json({message: e.message});
+            }
+        });
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
 };
 
-const getCompanyInfo = async (req, res) => {
-  const companyId = req.params.companyId;
+const companyLogin = async (req, res) => {
+    const {mail, password} = req.body;
+    try {
+        const company = await Company.findOne({mail})
+        if (!company) return res.status(401).json({message: "Invalid email"});
 
+        if (!company.confirmed) return res.status(401).json({message: "You must to verify your email first"})
 
-  try {
-    const companyInfo = await Company.findById(companyId)
-    res.status(200).json(companyInfo);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+        const passwordMatch = await bcrypt.compare(password, company.password)
+        if (!passwordMatch) return res.status(401).json({message: "Invalid password"});
 
-const getCompanies = async (req, res) => {
-  try {
-    const companyList = await Company.find();
-    res.status(200).json(companyList);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+        const token = jwt.sign({companyId: company._id, mail},
+            process.env.JWT_SECRET_KEY,
+            {expiresIn: '3h'});
 
-const getCustomersByCompany = async (req, res) => {
-  const companyId = req.params.companyId;
+        const companyData = {
+            ID: company._id,
+            name: company.name,
+            email: company.mail
+        }
 
-  try {
-    const customers = await Company.findById(companyId)
-      .select("customers")
-      .populate("customers");
+        res.status(200).json({token, companyData});
 
-    res.status(200).json(customers);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+}
 
-const getUsersByCompany = async (req, res) => {
-  const companyId = req.params.companyId;
+const confirmCompany = async (req, res, next) => {
+    try {
+        console.log(req.user);
+        const companyExist = await Company.findById(req.user.ID);
+        if (!companyExist) return res.status(401).json({message: "No Companies with this ID"});
 
-  try {
-    const users = await Company.findById(companyId)
-      .select("users")
-      .populate("users");
+        const company = await Company.findByIdAndUpdate(req.user.ID, {
+            confirmed: true
+        }, {new: true});
 
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+        next()
 
-const getRdoByCompany = async (req, res) => {
-  const companyId = req.params.companyId;
-
-  try {
-    const allRdo = await Company.findById(companyId)
-      .select("rdo")
-      .populate("rdo");
-
-    res.status(200).json(allRdo);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+}
 
 module.exports = {
-  createCompany,
-  getCompanyInfo,
-  getCompanies,
-  getCustomersByCompany,
-  getUsersByCompany,
-  getRdoByCompany
+    companyRegister,
+    companyLogin,
+    confirmCompany,
 };
