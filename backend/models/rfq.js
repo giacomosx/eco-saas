@@ -26,12 +26,13 @@ const RFQSchema = mongoose.Schema({
         description: String,
         qty: Number,
         packing: String,
+        number: Number
     }],
     status: {
         type: String,
         required: true,
-        enum: ['pending', 'in progress', 'resolved', 'rejected'],
-        default: 'pending',
+        enum: ['Pending', 'In progress', 'Resolved', 'Rejected'],
+        default: 'Pending',
     },
     note: {
         type: String,

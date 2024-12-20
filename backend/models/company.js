@@ -43,10 +43,10 @@ const companySchema = mongoose.Schema(
                 ref: "Customers",
             },
         ],
-        rdo: [
+        rfq: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "Rdo",
+                ref: "RFQ",
             },
         ],
         suppliers: [

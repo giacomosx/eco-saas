@@ -6,6 +6,7 @@ const server = express();
 
 /*const authRoute = require('./routes/auth')*/
 const rfqRoutes = require("./routes/rfq");
+const productRoutes = require("./routes/product");
 
 const generalErrorsHandler = require('./middlewares/errors/generalErrorsHandler')
 const notFoundError = require('./middlewares/errors/notFoundError')
@@ -18,6 +19,7 @@ server.use(express.json());
 
 /*server.use('/api/auth', authRoute);*/
 server.use('/rfq', rfqRoutes);
+server.use('/product', productRoutes);
 server.use('/', notFoundError)
 server.use(generalErrorsHandler)
 

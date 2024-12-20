@@ -17,7 +17,7 @@ const createRfq = async (req, res) => {
 const readAllRfq = async (req, res) => {
 
     try {
-        const allRfq = await Rfq.find().limit(5);
+        const allRfq = await Rfq.find().limit(5).sort({createdAt: -1});
 
         return res.status(200).json(allRfq);
     } catch (error) {
@@ -43,8 +43,22 @@ const changeRfqStatus = async (req, res) => {
     }
 }
 
+const getRfqById = async (req, res) => {
+    const {id} = req.params;
+
+    try {
+        const rfq = await Rfq.findById(id)
+
+        return res.status(200).json(rfq);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({message: error.message});
+    }
+}
+
 module.exports = {
     createRfq,
     readAllRfq,
     changeRfqStatus,
+    getRfqById,
 };
