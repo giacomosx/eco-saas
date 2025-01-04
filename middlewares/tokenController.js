@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const verifyToken = async (req, res, next) => {
-    const token = req.headers.authorization ? req.headers.authorization.split(' ')[1] : null;
+    const token = req.headers.authorization ? req.headers.authorization.split(' ')[1] : req.cookies['token'];
 
     if (!token) {
         return res.status(401).json({message:"Token not found."});
@@ -12,8 +12,8 @@ const verifyToken = async (req, res, next) => {
                     return res.status(401).send({status: 401, message: 'Invalid token'});
                 } else {
                     req.user = {
-                        ID: decoded.ID,
-                        name: decoded.name,
+                        ID: decoded.sub,
+                        role: decoded.role,
                         email: decoded.email,
                     };
                     next()

@@ -3,8 +3,16 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const server = express();
+const cookieParser = require("cookie-parser");
 
-/*const authRoute = require('./routes/auth')*/
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true,
+};
+
+const authController = require('./middlewares/tokenController')
+
 const rfqRoutes = require("./routes/rfq");
 const productRoutes = require("./routes/product");
 
@@ -14,10 +22,14 @@ const notFoundError = require('./middlewares/errors/notFoundError')
 const PORT = process.env.PORT || 5001;
 const DB_NAME = process.env.DB_NAME;
 
-server.use(cors());
+server.use(cors(corsOptions));
+server.use(cookieParser());
 server.use(express.json());
 
 /*server.use('/api/auth', authRoute);*/
+
+server.use(authController.verifyToken);
+
 server.use('/rfq', rfqRoutes);
 server.use('/product', productRoutes);
 server.use('/', notFoundError)
