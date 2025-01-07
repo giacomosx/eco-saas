@@ -22,7 +22,7 @@ const RFQSchema = mongoose.Schema({
         required: true,
     },
     items: [{
-        cer: String,
+        cod: String,
         description: String,
         qty: Number,
         packing: String,

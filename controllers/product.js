@@ -33,7 +33,22 @@ const getAllProducts = async (req, res) => {
     }
 }
 
+const getProductByDescription = async (req, res) => {
+    const { description } = req.query
+
+    try {
+        const products = await Product.find({description: {$regex: description, $options: "i"}})
+
+        return res.status(200).json(products)
+
+    } catch (e) {
+        console.log(e)
+        return res.status(500).json({error: e.message})
+    }
+}
+
 module.exports = {
     createProduct,
     getAllProducts,
+    getProductByDescription,
 }
