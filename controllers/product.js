@@ -33,6 +33,24 @@ const getAllProducts = async (req, res) => {
     }
 }
 
+const getProductById = async (req, res) => {
+    const { id } = req.params
+
+    if (!id) {
+        return res.status(404).json({message:"Product not found"})
+    }
+
+    try {
+        const product = await Product.findById(id)
+
+        return res.status(200).json(product)
+
+    } catch (e) {
+        console.log(e)
+        return res.status(500).json({error: e.message})
+    }
+}
+
 const getProductByDescription = async (req, res) => {
     const { description } = req.query
 
@@ -51,4 +69,5 @@ module.exports = {
     createProduct,
     getAllProducts,
     getProductByDescription,
+    getProductById,
 }
